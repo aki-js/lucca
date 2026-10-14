@@ -1032,7 +1032,7 @@ function checkPillsReminder() {
         // 通知用の要素をその場で作る
         const toast = document.createElement('div');
         toast.className = 'pills-reminder-toast';
-        toast.textContent = 'Take it easy:)💊'; // メッセージも優しく調律
+        toast.textContent = 'Take it easy:) 💊'; // メッセージも優しく調律
         
         document.body.appendChild(toast);
         
@@ -1048,63 +1048,70 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(checkPillsReminder, 600);
 });
 
-    // 🔒 すべてのデータを1つのテキストファイル(.txt)としてエクスポート
-    function exportData() {
-        const allData = {
-            balance: localStorage.getItem('myBalance'),
-            historyLogs: localStorage.getItem('myHistoryLogs'),
-            dailyMemos: localStorage.getItem('myDailyMemos'),
-            dailyWeathers: localStorage.getItem('myDailyWeathers'),
-            periodStarts: localStorage.getItem('myPeriodStarts'),
-            periodEnds: localStorage.getItem('myPeriodEnds'),
-            budgetValue: localStorage.getItem('myBudgetValue')
-        };
-        
-        const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
-        const downloadAnchor = document.createElement('a');
-        const now = new Date();
-        const dateSlot = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-        
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `lucca_backup_${dateSlot}.txt`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
+// 🔒【修正】すべてのデータを1つのテキストファイル（.txt）として出力する
+function exportData() {
+    const allData = {
+        balance: localStorage.getItem('myBalance'),
+        historyLogs: localStorage.getItem('myHistoryLogs'),
+        dailyMemos: localStorage.getItem('myDailyMemos'),
+        dailyWeathers: localStorage.getItem('myDailyWeathers'),
+        periodStarts: localStorage.getItem('myPeriodStarts'),
+        periodEnds: localStorage.getItem('myPeriodEnds'),
+        budgetValue: localStorage.getItem('myBudgetValue')
+    };
+    
+    // text/plain に変更してテキストファイルとして出力
+    const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(allData));
+    const downloadAnchor = document.createElement('a');
+    
+    const now = new Date();
+    const dateSlot = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    
+    downloadAnchor.setAttribute("href", dataStr);
+    // ファイル名を lucca_backup_日付.txt に変更
+    downloadAnchor.setAttribute("download", `lucca_backup_${dateSlot}.txt`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
 
-    // 🔒 エクスポートしたテキストファイル(.txt)からデータを復元
-    function importData() {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.txt, .json';
+// 🔒【修正】拡張子 .txt ファイルを読み込んでデータを完全に復元する
+function importData() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    // .txt ファイルのみ受け付けるように変更
+    fileInput.accept = '.txt';
+    
+    fileInput.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
         
-        fileInput.onchange = e => {
-            const file = e.target.files;
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = event => {
-                try {
-                    const imported = JSON.parse(event.target.result);
-                    
-                    if (imported.balance) localStorage.setItem('myBalance', imported.balance);
-                    if (imported.historyLogs) localStorage.setItem('myHistoryLogs', imported.historyLogs);
-                    if (imported.dailyMemos) localStorage.setItem('myDailyMemos', imported.dailyMemos);
-                    if (imported.dailyWeathers) localStorage.setItem('myDailyWeathers', imported.dailyWeathers);
-                    if (imported.periodStarts) localStorage.setItem('myPeriodStarts', imported.periodStarts);
-                    if (imported.periodEnds) localStorage.setItem('myPeriodEnds', imported.periodEnds);
-                    if (imported.budgetValue) localStorage.setItem('myBudgetValue', imported.budgetValue);
-                    
-                    alert('データを復元しました。再読み込みします。');
-                    window.location.reload();
-                } catch (err) {
-                    alert('ファイルの形式が正しくないようです。');
-                }
-            };
-            reader.readAsText(file);
+        const reader = new FileReader();
+        reader.onload = event => {
+            try {
+                const imported = JSON.parse(event.target.result);
+                
+                if (imported.balance) localStorage.setItem('myBalance', imported.balance);
+                if (imported.historyLogs) localStorage.setItem('myHistoryLogs', imported.historyLogs);
+                if (imported.dailyMemos) localStorage.setItem('myDailyMemos', imported.dailyMemos);
+                if (imported.dailyWeathers) localStorage.setItem('myDailyWeathers', imported.dailyWeathers);
+                if (imported.periodStarts) localStorage.setItem('myPeriodStarts', imported.periodStarts);
+                if (imported.periodEnds) localStorage.setItem('myPeriodEnds', imported.periodEnds);
+                if (imported.budgetValue) localStorage.setItem('myBudgetValue', imported.budgetValue);
+                
+                alert('データを復元しました。再読み込みします。');
+                window.location.reload();
+                
+            } catch (err) {
+                alert('ファイルの形式が正しくないようです。');
+            }
         };
-        fileInput.click();
-    }
+        reader.readAsText(file);
+    };
+    
+    fileInput.click();
+}
+
 
 
 
