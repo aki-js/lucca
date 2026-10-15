@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lucca-cache-v3';
+const CACHE_NAME = 'lucca-cache-v4';
 const urlsToCache = ['./', 'index.html', 'manifest.json'];
 
 // インストール時に新しいキャッシュを保存
