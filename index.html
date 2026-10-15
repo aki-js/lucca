@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lucca</title>
+    <link href="https://googleapis.com" rel="stylesheet">
  <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -157,48 +158,79 @@
             z-index: -1;          /* 背景色を数字の「後ろ」に回り込ませる */
         }
 
-        /* 🌟 注意：ここに残っていた「.calendar-day.is-period-start::after」の重複コードは綺麗に削除しました */
+        
 
-        /* 🌟【追加】体調・お薬メモのミニマルなデザイン */
-        .daily-memo-section {
-            margin-top: 25px;
+            .daily-memo-section {
+            margin-top: 35px;
             text-align: left;
             padding: 0 4px;
             animation: fadeInMemo 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        .memo-date-label {
-            font-size: 11px;
-            color: #a3958d;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .memo-input-wrapper {
-            border-bottom: 1px dashed #e6dfda;
-            padding-bottom: 4px;
-        }
-        /* ✨ 変更後：フォントと薄さを極限まで美しく調律 */
-        #daily-memo-input {
-            width: 100%;
-            text-align: left;
-            font-size: 13px;
-            color: #8c7e74; /* 🌟 入力文字をほんのりマイルドなセピアグレーにして馴染ませる */
-            padding: 0;
-            border: none;         
-            background: transparent;
-            outline: none;
-            /* 🌟 英字が一番美しく佇む洗練されたモダンフォントを適用 */
-            font-family: "Times New Roman", "YuMincho", "游明朝", "Hiragino Mincho ProN", "MS Mincho", serif;
-            letter-spacing: 0.05em; /* 🌟 文字の間隔を少し広げて、ゆったりした空気を */
-            resize: none;         
-            height: 3.9em;        
-            line-height: 1.4;     
+    
+            /* 左右に分割するレイアウト */
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
         }
 
-        #daily-memo-input::placeholder {
-            color: #5c4e46; /* 🌟 ベースの色を少し引き締めつつ */
-            font-style: normal; /* 🌟 斜体を解除して、直線の美しさを際立たせる */
-            opacity: 0.35;    /* 🌟 ここで「お薬（💊）」と文字をまとめてふんわり薄く灯します */
-        }
+
+        .memo-date-left {
+    font-family: 'Inter', sans-serif;
+    font-weight: 100;
+    font-size: 34px;
+    color: #5c4e46;
+    line-height: 0.9;
+    min-width: 40px;
+    text-align: right;
+    margin-top: 1px;
+    letter-spacing: -0.05em; /* 数字同士はシュッと引き締める */
+}
+
+/* 中央：美しい境界線（縦線） */
+.memo-center-line {
+    width: 1px;
+    background-color: #e6dfda; /* 柔らかいセピアグレーの線 */
+    align-self: stretch; /* エリアの高さに合わせて縦に伸びる */
+}
+
+/* 右側：コンテンツをまとめる部屋 */
+.memo-content-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 各要素の縦の隙間 */
+}
+
+.memo-date-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 11px;
+    color: #a3958d;
+    letter-spacing: 0.05em;
+}
+.memo-input-wrapper {
+    border-bottom: 1px dashed #e6dfda;
+    padding-bottom: 4px;
+}
+#daily-memo-input {
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
+    color: #8c7e74;
+    padding: 0;
+    border: none;         
+    background: transparent;
+    outline: none;
+    font-family: "Times New Roman", "YuMincho", "游明朝", "Hiragino Mincho ProN", "MS Mincho", serif;
+    letter-spacing: 0.05em;
+    resize: none;         
+    height: 3.9em;        
+    line-height: 1.4;     
+}
+#daily-memo-input::placeholder {
+    color: #5c4e46;
+    font-style: normal;
+    opacity: 0.35;
+}
+
 
         @keyframes fadeInMemo {
             from { opacity: 0; transform: translateY(5px); }
@@ -238,11 +270,15 @@
             margin-bottom: 50px;
         }
         .balance-label {
-            font-size: 13px;
-            color: #a3958d;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;       /* 🌟 100から300（Light）へ。画像通りのシュッとした存在感を灯す */
+        font-size: 16px;        /* 🌟 画像の比率に合わせた、主張しすぎない上品なサイズ */
+        color: #a3958d;
+        text-transform: uppercase; /* 完璧な大文字固定 */
+        letter-spacing: 0.17em;   /* 🌟 広すぎず狭すぎない、元画像通りの美しく凛とした文字間隔 */
+        margin-bottom: 4px;
+        display: block;         
+        text-indent: 0.25em;    /* 中央揃えを美しく保つための隠し味 */
         }
         .balance-container {
             display: flex;
@@ -462,30 +498,47 @@
             opacity: 1 !important;
             transform: scale(1.2); /* 選択時は少し大きくなって愛らしく */
         }
-/* 💊 ひっそりお薬通知のミニマルスタイル */
+        
 .pills-reminder-toast {
     position: fixed;
-    bottom: 24px;
+    bottom: 32px; /* スマホの片手操作でも邪魔にならない絶妙な高さ */
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background-color: #f4ede7; /* 肌馴染みの良い淡いベージュグレー */
-    color: #8c7e74;            /* 落ち着いたセピアグレー */
-    font-size: 12px;
-    padding: 10px 20px;
-    border-radius: 20px;
-    letter-spacing: 0.05em;
+    
+    
+    background-color: rgba(240, 233, 245, 0.95); 
+    color: #83758c; /* 文字色も調和する少しスモーキーな紫グレーへ */
+    
+    /* 📐 形の引き算（丸みを少し抑え、よりシャープでモダンな佇まいに） */
+    font-family: 'Inter', sans-serif;
+    font-weight: 100;
+    font-size: 11px; /* 12pxから11pxへ、さらに小さく美しく */
+    padding: 8px 18px; /* 厚みを薄くして、スマートな長方形に */
+    border-radius: 6px; /* 丸いカプセル型から、エッジのある微細な角丸へ変更 */
+    letter-spacing: 0.1em;
     z-index: 1000;
     opacity: 0;
     pointer-events: none;
-    box-shadow: 0 4px 12px rgba(92, 78, 70, 0.06);
-    animation: fadeToast 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    
+    /* 影も引き算して、空気のように軽く */
+    box-shadow: 0 4px 16px rgba(131, 117, 140, 0.04);
+    
+    /* 儚く消えるミストのようなアニメーション */
+    animation: fadeToast 4.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
+
 @keyframes fadeToast {
-    0% { transform: translateX(-50%) translateY(20px); opacity: 0; }
-    10% { transform: translateX(-50%) translateY(0); opacity: 1; }
-    80% { transform: translateX(-50%) translateY(0); opacity: 1; filter: blur(0px); }
-    100% { transform: translateX(-50%) translateY(-10px); opacity: 0; filter: blur(2px); }
+    0% { transform: translateX(-50%) translateY(15px); opacity: 0; filter: blur(2px); }
+    8% { transform: translateX(-50%) translateY(0); opacity: 1; filter: blur(0px); }
+    85% { transform: translateX(-50%) translateY(0); opacity: 1; filter: blur(0px); }
+    100% { transform: translateX(-50%) translateY(-5px); opacity: 0; filter: blur(4px); } /* 💡 最後はミスト（blur）の中に溶けて消えるように */
 }
+
+.is-pills-selected {
+    opacity: 1 !important;
+    transform: scale(1.2);
+}
+
 
     </style>
 <!-- 📱 スマホアプリ化（PWA）のための設定 -->
@@ -511,7 +564,7 @@ if ('serviceWorker' in navigator) {
 <body>
 <div class="wrapper">
     <div class="balance-section">
-        <span class="balance-label">lucca</span>
+        <span class="balance-label">LUCCA</span>
         <div class="balance-container">
             <span id="balance" class="balance-amount">0</span>
             <span class="balance-unit">yen</span>
@@ -566,13 +619,38 @@ if ('serviceWorker' in navigator) {
                 <div id="calendar-days" style="display: grid; grid-template-columns: repeat(7, 1fr); grid-column: span 7; gap: 12px 8px; margin-top: 10px;"></div>
             </div>
 
-        <!-- 🌟 ひっそりと佇むその日の記録エリア（3段レイアウトで調律） -->
-            <div id="daily-memo-section" class="daily-memo-section" style="display: none;">
+        <div id="daily-memo-section" class="daily-memo-section" style="display: none;">
+            
+            <!-- 【左側】大きく表示される日付の「日」の数字だけが入る部屋 -->
+            <div id="selected-day-number" class="memo-date-left">07</div>
+            
+            <!-- 【中央】美しい縦の1本線 -->
+            <div class="memo-center-line"></div>
+            
+                    <!-- 【右側】お天気やスイッチ、メモが並ぶ部屋 -->
+            <div class="memo-content-right">
                 
-                <!-- 1段目：日付ラベル ＆ 生理スイッチ -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <span id="selected-day-label" class="memo-date-label" style="margin-bottom: 0;">10/07のきろく</span>
+                            <!-- 1段目：お薬スイッチ ＆ お天気選択 ＆ 生理スイッチ -->
+                <div style="display: flex; justify-content: space-between; align-items: center; min-height: 24px;">
                     
+                    <!-- 左側：お薬 ＆ お天気グループ -->
+                    <div style="display: flex; gap: 18px; align-items: center; padding-left: 2px;">
+                        <!-- 💊 お薬スイッチ（お天気マークのように独立） -->
+                        <span onclick="togglePillsReminder()" id="pills-switch" style="cursor: pointer; opacity: 0.25; font-size: 15px; transition: opacity 0.2s, transform 0.2s;">💊</span>
+                        
+                        <!-- 美しい区切りのための極薄の縦線 -->
+                        <div style="width: 1px; height: 12px; background-color: #f2ede9;"></div>
+
+                        <!-- ☀️ お天気選択 -->
+                        <div id="weather-select-group" style="display: flex; gap: 14px; font-size: 15px;">
+                            <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
+                            <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
+                            <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
+                            <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 右側：生理スイッチ（位置はキープ） -->
                     <div style="display: flex; gap: 12px;">
                         <label class="period-checkbox-label">
                             <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
@@ -584,22 +662,16 @@ if ('serviceWorker' in navigator) {
                         </label>
                     </div>
                 </div>
+    
                 
-                <!-- 2段目：☀️ お天気選択（文字化けを防ぐため少し隙間を開ける） -->
-                <div style="display: flex; align-items: center; margin-bottom: 16px; padding-left: 2px;">
-                    <div id="weather-select-group" style="display: flex; gap: 14px; font-size: 15px;">
-                        <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
-                        <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
-                        <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
-                        <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
-                    </div>
-                </div>
-                
-                <!-- 3段目：💊 メモ入力欄 -->
-                <div class="memo-input-wrapper">
-                    <textarea id="daily-memo-input" placeholder="daily notes 💊" onblur="saveDailyMemo()"></textarea>
-                </div>
+            <!-- 3段目：💊 メモ入力欄（プレースホルダーを完全に引き算し、美しい空白へ） -->
+<div class="memo-input-wrapper" style="margin-top: 6px;">
+    <textarea id="daily-memo-input" onblur="saveDailyMemo()"></textarea>
+</div>    
+
             </div>
+    
+        </div>
 
 <!-- 📥 【カレンダーエリアの一番下にアイコンを配置】 -->
 <div style="margin-top: 45px; text-align: right; padding: 0 4px; display: flex; justify-content: flex-end; gap: 18px; font-size: 14px;">
@@ -619,12 +691,12 @@ if ('serviceWorker' in navigator) {
     let selectedDateStr = null;
     let dailyMemos = JSON.parse(localStorage.getItem('myDailyMemos')) || {}; 
     let dailyWeathers = JSON.parse(localStorage.getItem('myDailyWeathers')) || {}; 
+    let dailyPills = JSON.parse(localStorage.getItem('myDailyPills')) || {};
     let periodStarts = JSON.parse(localStorage.getItem('myPeriodStarts')) || [];
     let periodEnds = JSON.parse(localStorage.getItem('myPeriodEnds')) || [];
     let savedBudgetValue = Number(localStorage.getItem('myBudgetValue')) || 0;
-
-    // カレンダーが現在表示している年月を管理する変数（初期値は現在のブラウザ日時）
-    let calendarDate = new Date();
+    
+        let calendarDate = new Date();
     // 🌟【追加】起動時に今日が「1日」かつ予算が設定されていれば、自動で残高を予算額にリセットする
     const startupToday = new Date();
     if (startupToday.getDate() === 1 && savedBudgetValue > 0) {
@@ -926,9 +998,8 @@ if ('serviceWorker' in navigator) {
         } else {
             selectedDateStr = targetStr;
             
-            // メモエリアを表示し、ラベルを「◯月◯日のきろく」に書き換える
-            memoLabel.textContent = `${month + 1}/${String(date).padStart(2, '0')} のきろく`;
-            memoSection.style.display = 'block';
+        document.getElementById('selected-day-number').textContent = String(date).padStart(2, '0');
+            memoSection.style.display = 'flex';
             
             // 🌟 保存されているメモがあれば入力欄に呼び出し、なければ空にする
             memoInput.value = dailyMemos[targetStr] || '';
@@ -949,10 +1020,19 @@ if ('serviceWorker' in navigator) {
                 if (activeWeatherEl) activeWeatherEl.classList.add('is-weather-selected');
             }
 
+            const pillsSwitchEl = document.getElementById('pills-switch');
+        if (dailyPills[targetStr]) {
+            pillsSwitchEl.classList.add('is-pills-selected');
+        } else {
+            pillsSwitchEl.classList.remove('is-pills-selected');
+        }
+
         // カレンダーと履歴を最新の選択状態で再描画
         renderCalendar();
         renderHistory();
     }
+
+
 
     // 🌟【追加】入力された体調・お薬メモを自動でローカルストレージに保存する関数
     function saveDailyMemo() {
@@ -1030,27 +1110,41 @@ if ('serviceWorker' in navigator) {
         renderCalendar(); // カレンダー側にも変化を出したい時のために再描画
     }
 
+    function togglePillsReminder() {
+    if (!selectedDateStr) return;
+
+    const pillsSwitchEl = document.getElementById('pills-switch');
+    
+    if (dailyPills[selectedDateStr]) {
+        // すでにONなら消去
+        delete dailyPills[selectedDateStr];
+        pillsSwitchEl.classList.remove('is-pills-selected');
+    } else {
+        // OFFならONにする
+        dailyPills[selectedDateStr] = true;
+        pillsSwitchEl.classList.add('is-pills-selected');
+    }
+
+    localStorage.setItem('myDailyPills', JSON.stringify(dailyPills));
+    renderCalendar(); // カレンダー側にも変化を出したい時のために再描画
+}
+
 
 function checkPillsReminder() {
     const todayObj = new Date();
     const todayStr = `${todayObj.getFullYear()}/${String(todayObj.getMonth() + 1).padStart(2, '0')}/${String(todayObj.getDate()).padStart(2, '0')}`;
     
-    const todayMemo = dailyMemos[todayStr] || "";
-    
-    // もし今日のメモに「💊」が含まれていたら、優しく灯す
-    if (todayMemo.includes("💊")) {
-        // 通知用の要素をその場で作る
+    // 今日の日付でお薬スイッチがON（true）になっていたら優しく灯す
+    if (dailyPills[todayStr]) {
         const toast = document.createElement('div');
         toast.className = 'pills-reminder-toast';
-        toast.textContent = 'Take it easy:) 💊'; // メッセージも優しく調律
+        toast.textContent = 'take it easy. ✿'; 
         
         document.body.appendChild(toast);
-        
-        // アニメーションが終わる4秒後に自動で要素を消去
-        setTimeout(() => { toast.remove(); }, 4000);
+        setTimeout(() => { toast.remove(); }, 4500);
     }
-
 }
+
 
 // ページが読み込まれたら自動で実行する（既存のコードの起動処理にブレンド）
 window.addEventListener('DOMContentLoaded', () => {
