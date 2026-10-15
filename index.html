@@ -88,7 +88,7 @@
         .calendar-day.has-memo-dot:not(.has-dot)::after {
             content: '•';
             font-size: 10px;
-            color: #e3b3b3;
+            color: #eacccc;
             position: absolute;
             bottom: -4px;
             left: calc(50% + 4px); /* 中央から4pxだけ右にずらす */
@@ -104,21 +104,23 @@
             bottom: -4px;
             left: calc(50% + 2px);
             transform: translateX(-50%);
-            background: linear-gradient(to right, #8c7e74 50%, #e3b3b3 50%);
+            background: linear-gradient(to right, #8c7e74 50%, #eacccc 50%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1;
         }  
-        /* 🌟 生理期間中にひっそりピン留めされる「📍」マーク（干渉しないよう before に統一） */
+
         .calendar-day.is-period-start::before {
-            content: '📍';
-            font-size: 9px;
+            content: '✿'; /* 🌟 月の涙をイメージした花のシルエット */
+            font-size: 10px;
+            color: #EBE1A9; /* 🌟 仄かに青白く光る、月の涙のティアーズカラー */
             position: absolute;
-            top: -1px; /* 右上の美しい位置に配置 */
-            right: -1px;
+            top: -2px; 
+            right: -3px;
             line-height: 1;
             z-index: 2;
+            font-weight: normal;
         }
 
         /* 👑 10月7日の特別な日だけに左上に灯る王冠 */
@@ -146,11 +148,11 @@
         .calendar-day.is-selected::before {
             content: '';
             position: absolute;
-            top: 3px;             /* 上端は真四角の位置にピタッと固定 */
+            top: 3px;             
             left: 0;
-            width: 28px;          /* 横幅をマスのサイズ（28px）にピッタリ合わせる */
-            height: 30px;         /* 縦幅を30pxにして、下側だけに2pxはみ出させる */
-            background-color: #f4ede7; /* 肌馴染みの良いごく淡いベージュグレー */
+            width: 28px;          
+            height: 30px;         
+            background-color: #e8e7e8; 
             border-radius: 4px;   /* ほんのり丸い四角 */
             z-index: -1;          /* 背景色を数字の「後ろ」に回り込ませる */
         }
@@ -174,25 +176,30 @@
             border-bottom: 1px dashed #e6dfda;
             padding-bottom: 4px;
         }
+        /* ✨ 変更後：フォントと薄さを極限まで美しく調律 */
         #daily-memo-input {
             width: 100%;
             text-align: left;
             font-size: 13px;
-            color: #5c4e46;
+            color: #8c7e74; /* 🌟 入力文字をほんのりマイルドなセピアグレーにして馴染ませる */
             padding: 0;
-            border: none;         /* 枠線を完全に消去 */
+            border: none;         
             background: transparent;
             outline: none;
-            font-family: inherit;
-            resize: none;         /* 右下のサイズ変更ツマミを消して美しさを固定 */
-            height: 3.9em;        /* 13px × 3行分（約3.9文字分）の高さに固定 */
-            line-height: 1.3;     /* 行間を心地よく調律 */
+            /* 🌟 英字が一番美しく佇む洗練されたモダンフォントを適用 */
+            font-family: "Times New Roman", "YuMincho", "游明朝", "Hiragino Mincho ProN", "MS Mincho", serif;
+            letter-spacing: 0.05em; /* 🌟 文字の間隔を少し広げて、ゆったりした空気を */
+            resize: none;         
+            height: 3.9em;        
+            line-height: 1.4;     
         }
 
         #daily-memo-input::placeholder {
-            color: #d1c7bd;
-            font-style: italic;
+            color: #5c4e46; /* 🌟 ベースの色を少し引き締めつつ */
+            font-style: normal; /* 🌟 斜体を解除して、直線の美しさを際立たせる */
+            opacity: 0.35;    /* 🌟 ここで「お薬（💊）」と文字をまとめてふんわり薄く灯します */
         }
+
         @keyframes fadeInMemo {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
@@ -507,7 +514,7 @@ if ('serviceWorker' in navigator) {
         <span class="balance-label">lucca</span>
         <div class="balance-container">
             <span id="balance" class="balance-amount">0</span>
-            <span class="balance-unit">円</span>
+            <span class="balance-unit">yen</span>
         </div>
     </div>
     <!-- 左右に並べるためのコンテナ -->
@@ -515,12 +522,12 @@ if ('serviceWorker' in navigator) {
         <!-- 左側：計算エリア -->
         <div class="left-column">
            <div class="input-group" style="margin-top: 0;">
-                <label>予算</label>
+                <label>budget</label>
                 <!-- 🌟【修正】ボタンを消し、フォーカスが外れたら自動保存（onblur）する挙動へ -->
-                <input type="number" id="set-budget" placeholder="未設定" onblur="setBudget()">
+                <input type="number" id="set-budget" placeholder="optional" onblur="setBudget()">
             </div>    
             <div class="input-group">
-                <input type="text" id="memo" placeholder="✒️" style="text-align: left; width: 45%;">
+                <input type="text" id="memo" placeholder="🖊" style="text-align: left; width: 45%;">
                 <input type="number" id="amount" placeholder="0" style="width: 35%;">
                 <div style="display: flex; align-items: center;">
             <button id="minus-btn" onclick="minusMoney()" style="font-size: 18px; font-weight: 300;">＋</button>
@@ -530,11 +537,6 @@ if ('serviceWorker' in navigator) {
                 <ul id="history-list" class="history-list"></ul>
             </div>
 
-          <!-- 🔒【追加】ひっそりと佇むバックアップ・復元エリア（アイコン版） -->
-<div style="margin-top: 45px; text-align: left; padding: 0 2px; display: flex; gap: 18px; font-size: 14px;">
-    <span onclick="exportData()" title="データを保存" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔐</span>
-    <span onclick="importData()" title="データを復元" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔑</span>
-</div>
 
         </div>
 
@@ -574,11 +576,11 @@ if ('serviceWorker' in navigator) {
                     <div style="display: flex; gap: 12px;">
                         <label class="period-checkbox-label">
                             <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
-                            <span>📍 開始</span>
+                            <span><span style="color: #EBE1A9; margin-right: 2px;">✿</span> start</span>
                         </label>
                         <label class="period-checkbox-label">
                             <input type="checkbox" id="period-end-checkbox" onchange="savePeriodEnd()">
-                            <span>終了</span>
+                            <span>end</span>
                         </label>
                     </div>
                 </div>
@@ -595,10 +597,18 @@ if ('serviceWorker' in navigator) {
                 
                 <!-- 3段目：💊 メモ入力欄 -->
                 <div class="memo-input-wrapper">
-                     <textarea id="daily-memo-input" placeholder="体調や💊のメモ..." onblur="saveDailyMemo()"></textarea>
+                    <textarea id="daily-memo-input" placeholder="daily notes 💊" onblur="saveDailyMemo()"></textarea>
                 </div>
             </div>
-        </div>
+
+<!-- 📥 【カレンダーエリアの一番下にアイコンを配置】 -->
+<div style="margin-top: 45px; text-align: right; padding: 0 4px; display: flex; justify-content: flex-end; gap: 18px; font-size: 14px;">
+    <span onclick="exportData()" title="データを保存" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔐</span>
+    <span onclick="importData()" title="データを復元" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔑</span>
+</div> <!-- 👈 ここに「閉じタグ」を正しく配置します -->
+
+        </div> <!-- 右カラム（right-column）の閉じタグ -->
+
     </div>
 </div>
 <script>
@@ -661,7 +671,7 @@ if ('serviceWorker' in navigator) {
             const li = document.createElement('li');
             li.className = 'history-item';
             li.onclick = (event) => deleteHistoryItem(actualIndex, event);
-            const displayAmount = `${log.amount.toLocaleString()} 円`;
+            const displayAmount = `${log.amount.toLocaleString()}`;
             const memoText = log.memo ? log.memo : '';
             li.innerHTML = `
                 <div class="history-left">
@@ -826,7 +836,8 @@ if ('serviceWorker' in navigator) {
                 const isNextPeriodPrediction = (diffDays >= 28 && diffDays <= 32) || (diffDays >= 56 && diffDays <= 60);
                 
                 if (isNextPeriodPrediction) {
-                    dayDiv.style.backgroundColor = '#fff0f0'; // ごくごく淡いペールピンクの灯り
+                dayDiv.style.backgroundColor = '#b8cbdc'; // 🌟 仄かに青白く光るティアーズカラー
+                dayDiv.style.color = '#ffffff';           /* 🌟 青背景の中で数字が美しく引き立つよう、文字をピュアな白に */
                     dayDiv.style.borderRadius = '4px';
                 }
             }
@@ -1019,12 +1030,11 @@ if ('serviceWorker' in navigator) {
         renderCalendar(); // カレンダー側にも変化を出したい時のために再描画
     }
 
-    // 💊 アプリ起動時にお薬の記録をひっそりチェックする関数
+
 function checkPillsReminder() {
     const todayObj = new Date();
     const todayStr = `${todayObj.getFullYear()}/${String(todayObj.getMonth() + 1).padStart(2, '0')}/${String(todayObj.getDate()).padStart(2, '0')}`;
     
-    // 今日のメモを取得（なければ空文字）
     const todayMemo = dailyMemos[todayStr] || "";
     
     // もし今日のメモに「💊」が含まれていたら、優しく灯す
