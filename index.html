@@ -786,26 +786,57 @@ if ('serviceWorker' in navigator) {
                 <div id="calendar-days" style="display: grid; grid-template-columns: repeat(7, 1fr); grid-column: span 7; gap: 12px 8px; margin-top: 10px;"></div>
             </div>
 
+                    <!-- 🌟 バグを完全排除した、その場で最速2手完結の入力エリア -->
         <div id="daily-memo-section" class="daily-memo-section" style="display: none;">
             
-            <!-- 【左側】大きく表示される日付の「日」の数字だけが入る部屋（タップで窓が開く） -->
-            <div id="selected-day-number" class="memo-date-left" onclick="openIconModal()">07</div>
-
+            <!-- 【左側】大きく表示される日付の「日」の数字だけが入る部屋 -->
+            <div id="selected-day-number" class="memo-date-left">07</div>
             
             <!-- 【中央】美しい縦の1本線 -->
             <div class="memo-center-line"></div>
             
-                    <!-- 【右側】お天気やスイッチ、メモが並ぶ部屋 -->
+            <!-- 【右側】お天気やスイッチ、メモがその場で1列に並ぶ部屋 -->
             <div class="memo-content-right">
                 
-            <!-- 3段目：💊 メモ入力欄（プレースホルダーを完全に引き算し、美しい空白へ） -->
-<div class="memo-input-wrapper" style="margin-top: 6px;">
-    <textarea id="daily-memo-input" onblur="saveDailyMemo()"></textarea>
-</div>    
+                <!-- アイコンたちが佇む1段目の部屋 -->
+                <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap; min-height: 28px; margin-bottom: 8px;">
+                    
+                    <!-- 💊 お薬スイッチ -->
+                    <span onclick="togglePillsReminder()" id="pills-switch" style="cursor: pointer; font-size: 16px; transition: opacity 0.2s, transform 0.2s;">💊</span>
+                    
+                    <!-- ☀️ お天気選択 -->
+                    <div id="weather-select-group" style="display: flex; gap: 14px; font-size: 16px;">
+                        <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
+                        <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
+                        <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
+                        <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
+                    </div>
+
+                    <!-- 極薄の区切り点 -->
+                    <span style="color: #f2ede9; opacity: 0.5;">•</span>
+                    
+                    <!-- ✿ 生理スイッチ（idの競合を完全に排除した綺麗な構造） -->
+                    <div style="display: flex; gap: 14px;">
+                        <label class="period-checkbox-label" style="font-size: 12px;">
+                            <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
+                            <span><span style="color: #EBE1A9; margin-right: 2px;">✿</span> start</span>
+                        </label>
+                        <label class="period-checkbox-label" style="font-size: 12px;">
+                            <input type="checkbox" id="period-end-checkbox" onchange="savePeriodEnd()">
+                            <span>end</span>
+                        </label>
+                    </div>
+                </div>
+    
+                <!-- メモ入力欄（item） -->
+                <div class="memo-input-wrapper" style="margin-top: 6px;">
+                    <textarea id="daily-memo-input" onblur="saveDailyMemo()" placeholder="item"></textarea>
+                </div>    
 
             </div>
-    
         </div>
+
+
 
 <!-- 📥 【カレンダーエリアの一番下にアイコンを配置】 -->
 <div style="margin-top: 45px; text-align: right; padding: 0 4px; display: flex; justify-content: flex-end; gap: 18px; font-size: 14px;">
@@ -819,14 +850,6 @@ if ('serviceWorker' in navigator) {
 </div>
 <script>
 
-    // 🚪 アイコン別ウィンドウ（モーダル）の開閉制御
-    function openIconModal() {
-        document.getElementById('icon-modal').classList.add('is-open');
-    }
-    function closeIconModal(event) {
-        document.getElementById('icon-modal').classList.remove('is-open');
-    }
-    
 // 🌓 配色テーマ切り替えのプログラム
     let currentTheme = localStorage.getItem('myTheme') || 'light';
     if (currentTheme === 'dark') {
@@ -1142,37 +1165,35 @@ if ('serviceWorker' in navigator) {
         renderCalendar(); // 新しい年月でカレンダーを再描画
     }
 
-        // 日付をタップしたときの処理
+            // 日付をタップしたときの処理（start / end のチェック状態を完璧に復元する）
     function selectDay(year, month, date) {
         const targetStr = `${year}/${String(month + 1).padStart(2, '0')}/${String(date).padStart(2, '0')}`;
         
         const memoSection = document.getElementById('daily-memo-section');
         const memoInput = document.getElementById('daily-memo-input');
-        const memoLabel = document.getElementById('selected-day-label');
 
-        // すでに選択されている日をもう一度タップしたら、選択を解除（全件表示に戻す）
+        // すでに選択されている日をもう一度タップしたら、選択を解除
         if (selectedDateStr === targetStr) {
             selectedDateStr = null;
-            memoSection.style.display = 'none'; // メモエリアをひっそり閉じる
+            memoSection.style.display = 'none'; 
             memoInput.value = '';
         } else {
             selectedDateStr = targetStr;
             
-        document.getElementById('selected-day-number').textContent = String(date).padStart(2, '0');
+            document.getElementById('selected-day-number').textContent = String(date).padStart(2, '0');
             memoSection.style.display = 'flex';
             
-            // 🌟 保存されているメモがあれば入力欄に呼び出し、なければ空にする
+            // 保存されているメモ（item）を復元
             memoInput.value = dailyMemos[targetStr] || '';
 
-           // 🌟【修正】その日が「開始日」か「終了日」かそれぞれチェックして復元する
+            // 🌟 start と end のチェックボックスを確実に取得し、保存データと同期する
             const startCheckbox = document.getElementById('period-start-checkbox');
             const endCheckbox = document.getElementById('period-end-checkbox');
             
-            startCheckbox.checked = periodStarts.includes(targetStr);
-            endCheckbox.checked = periodEnds.includes(targetStr);
-        }
-        
- // ☀️ 保存されている天気があれば選択状態を復元する
+            if (startCheckbox) startCheckbox.checked = periodStarts.includes(targetStr);
+            if (endCheckbox) endCheckbox.checked = periodEnds.includes(targetStr);
+            
+            // 保存されている天気を復元
             const savedWeather = dailyWeathers[targetStr];
             document.querySelectorAll('#weather-select-group span').forEach(el => el.classList.remove('is-weather-selected'));
             if (savedWeather) {
@@ -1180,19 +1201,19 @@ if ('serviceWorker' in navigator) {
                 if (activeWeatherEl) activeWeatherEl.classList.add('is-weather-selected');
             }
 
+            // 保存されているお薬を復元
             const pillsSwitchEl = document.getElementById('pills-switch');
-        if (dailyPills[targetStr]) {
-            pillsSwitchEl.classList.add('is-pills-selected');
-        } else {
-            pillsSwitchEl.classList.remove('is-pills-selected');
+            if (dailyPills[targetStr]) {
+                pillsSwitchEl.classList.add('is-pills-selected');
+            } else {
+                pillsSwitchEl.classList.remove('is-pills-selected');
+            }
         }
-
+        
         // カレンダーと履歴を最新の選択状態で再描画
         renderCalendar();
         renderHistory();
     }
-
-
 
     // 🌟【追加】入力された体調・お薬メモを自動でローカルストレージに保存する関数
     function saveDailyMemo() {
@@ -1381,40 +1402,5 @@ function importData() {
 
 
 </script>
-<!-- 📥 タップすると浮かび上がるアイコン一覧の別ウィンドウ -->
-<div id="icon-modal" class="icon-modal-overlay" onclick="closeIconModal(event)">
-    <div class="icon-modal-window" onclick="event.stopPropagation()">
-        <!-- 上記で新しく作った memo-icons-row の中身をそのまま綺麗に格納 -->
-        <div class="memo-icons-row" style="flex-direction: column; gap: 20px; margin-bottom: 0;">
-            <!-- お薬 ＆ お天気グループ -->
-            <div class="icon-group-left" style="gap: 16px; justify-content: center; width: 100%;">
-                <span onclick="togglePillsReminder()" id="pills-switch" style="font-size: 18px;">💊</span>
-                <div style="width: 1px; height: 12px; background-color: #f2ede9; opacity: 0.5;"></div>
-                <div id="weather-select-group" style="gap: 12px; font-size: 18px;">
-                    <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
-                    <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
-                    <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
-                    <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
-                </div>
-            </div>
-            
-            <!-- 美しい水平の境界線 -->
-            <div style="width: 100%; height: 1px; background-color: #f2ede9; opacity: 0.3;"></div>
-
-            <!-- 生理スイッチ -->
-            <div style="display: flex; gap: 20px; justify-content: center; width: 100%;">
-                <label class="period-checkbox-label" style="font-size: 13px;">
-                    <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
-                    <span><span style="color: #EBE1A9; margin-right: 2px;">✿</span> start</span>
-                </label>
-                <label class="period-checkbox-label" style="font-size: 13px;">
-                    <input type="checkbox" id="period-end-checkbox" onchange="savePeriodEnd()">
-                    <span>end</span>
-                </label>
-            </div>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
