@@ -17,6 +17,9 @@
             background-color: #ffffff;
             color: #5c4e46; /* 柔らかく洗練されたセピアグレー */
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
             padding: 60px 20px;
             text-align: center;
             overflow-x: hidden; 
@@ -175,14 +178,14 @@
 
         
             .daily-memo-section {
-            margin-top: 35px;
+            margin-top: 55px;
             text-align: left;
             padding: 0 4px;
             animation: fadeInMemo 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     
             /* 左右に分割するレイアウト */
             display: flex;
-            gap: 16px;
+            gap: 24px;
             align-items: flex-start;
         }
 
@@ -199,12 +202,14 @@
     letter-spacing: -0.05em; /* 数字同士はシュッと引き締める */
 }
 
-/* 中央：美しい境界線（縦線） */
-.memo-center-line {
+    /* 中央：美しい境界線（縦線） */
+    .memo-center-line {
     width: 1px;
-    background-color: #e6dfda; /* 柔らかいセピアグレーの線 */
+    background-color: #f2ede9; /* 🌟 より淡く、肌馴染みの良い極薄セピアへ */
     align-self: stretch; /* エリアの高さに合わせて縦に伸びる */
+    opacity: 0.7;        /* 🌟 透過させてさらに儚く */
 }
+
 
 /* 右側：コンテンツをまとめる部屋 */
 .memo-content-right {
@@ -552,6 +557,47 @@
     opacity: 1 !important;
     transform: scale(1.2);
 }
+        /* 🌟 アイコンたちが佇む1段目の部屋の調律 */
+        .memo-icons-row {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            min-height: 28px;
+            margin-bottom: 6px; /* メモ入力欄との間に少し隙間を空ける */
+        }
+        
+        /* ☀️ 天気やお薬グループの間隔を幾何学的に美しく広げる */
+        .icon-group-left {
+            display: flex; 
+            gap: 22px; /* 🌟 18pxから22pxへ。アイコン同士に心地よい呼吸を与える */
+            align-items: center; 
+            padding-left: 2px;
+        }
+
+        /* ☀️ お天気選択のアイコン同士の間隔 */
+        #weather-select-group {
+            display: flex; 
+            gap: 16px; /* 🌟 14pxから16pxへ広げて、スマホでもタップしやすく */
+            font-size: 14px; /* 🌟 ほんの少し小さく上品に */
+        }
+
+        /* 💊 お薬アイコンの通常時（消灯時）の佇まい */
+        #pills-switch {
+            cursor: pointer; 
+            opacity: 0.25; 
+            font-size: 14px; 
+            transition: opacity 0.2s, transform 0.2s, filter 0.2s;
+            filter: grayscale(100%); /* 🌟 通常時はグレーにして画面に溶け込ませる */
+        }
+
+        /* 💊 お薬アイコンが選択された（点灯した）ときの輝き */
+        #pills-switch.is-pills-selected {
+            opacity: 0.9 !important;
+            filter: grayscale(0%); /* 🌟 選択時だけ本来のカラーを灯す */
+            transform: scale(1.15);
+        }
+
+
         /* 🌑 影（Dark）テーマの調律コード */
         body.theme-dark {
             background-color: #0a0f1d; 
@@ -578,8 +624,12 @@
         body.theme-dark .memo-input-wrapper,
         body.theme-dark .input-group,
         body.theme-dark .history-item {
-            border-color: #1a2436; /* 境界線も静かに闇へ馴染ませる */
+            border-color: #161f30; /* 境界線も静かに闇へ馴染ませる */
         }
+        body.theme-dark .memo-center-line {
+            background-color: #161f30;
+        }
+
         body.theme-dark .balance-label,
         body.theme-dark .balance-unit,
         body.theme-dark .memo-date-label,
@@ -680,19 +730,19 @@ if ('serviceWorker' in navigator) {
                     <!-- 【右側】お天気やスイッチ、メモが並ぶ部屋 -->
             <div class="memo-content-right">
                 
-                            <!-- 1段目：お薬スイッチ ＆ お天気選択 ＆ 生理スイッチ -->
-                <div style="display: flex; justify-content: space-between; align-items: center; min-height: 24px;">
+                                <!-- 1段目：お薬スイッチ ＆ お天気選択 ＆ 生理スイッチ -->
+                <div class="memo-icons-row">
                     
-                    <!-- 左側：お薬 ＆ お天気グループ -->
-                    <div style="display: flex; gap: 18px; align-items: center; padding-left: 2px;">
-                        <!-- 💊 お薬スイッチ（お天気マークのように独立） -->
-                        <span onclick="togglePillsReminder()" id="pills-switch" style="cursor: pointer; opacity: 0.25; font-size: 15px; transition: opacity 0.2s, transform 0.2s;">💊</span>
+                    <!-- 左側：お薬 ＆ お天気グループ（新CSS適用） -->
+                    <div class="icon-group-left">
+                        <!-- 💊 お薬スイッチ（通常時のサイズとスタイルをスタイルシート側で一括制御） -->
+                        <span onclick="togglePillsReminder()" id="pills-switch">💊</span>
                         
                         <!-- 美しい区切りのための極薄の縦線 -->
-                        <div style="width: 1px; height: 12px; background-color: #f2ede9;"></div>
+                        <div style="width: 1px; height: 12px; background-color: #f2ede9; opacity: 0.5;"></div>
 
                         <!-- ☀️ お天気選択 -->
-                        <div id="weather-select-group" style="display: flex; gap: 14px; font-size: 15px;">
+                        <div id="weather-select-group">
                             <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
                             <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
                             <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
@@ -712,6 +762,7 @@ if ('serviceWorker' in navigator) {
                         </label>
                     </div>
                 </div>
+          
     
                 
             <!-- 3段目：💊 メモ入力欄（プレースホルダーを完全に引き算し、美しい空白へ） -->
