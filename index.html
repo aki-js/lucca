@@ -639,6 +639,73 @@
             color: #788599;
         }
 
+        /* 🌟 影モード：入力欄に数字が入っていないときの「optional」や「0」を極薄にする */
+        body.theme-dark input::placeholder {
+            color: #d2d7df; /* 軸の色は月明かりのまま */
+            opacity: 0.15;  /* 🌟 透明度を15%まで下げて、闇に溶け込ませる */
+        }
+        
+        /* 🌟 影モード：入力された文字や数字（金額の「0」など）の主張を一歩引かせる */
+        body.theme-dark #amount,
+        body.theme-dark #set-budget,
+        body.theme-dark #memo {
+            opacity: 0.4;  /* 🌟 通常時は40%の薄さで佇ませる */
+            transition: opacity 0.2s;
+        }
+
+        /* 🌟 タップして入力しているときだけ、優しく浮かび上がらせる */
+        body.theme-dark #amount:focus,
+        body.theme-dark #set-budget:focus,
+        body.theme-dark #memo:focus {
+            opacity: 0.85;
+        }
+                /* 🌌 アイコン専用の小さな別ウィンドウ（モーダル）の調律 */
+        .icon-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(10, 15, 29, 0.4); /* 仄かに闇を敷く */
+            backdrop-filter: blur(4px); /* 🌟 背景を幻想的にぼかす隠し味 */
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .icon-modal-overlay.is-open {
+            opacity: 1; pointer-events: auto;
+        }
+        .icon-modal-window {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 280px;
+            width: 80%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            transform: translateY(10px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .icon-modal-overlay.is-open .icon-modal-window {
+            transform: translateY(0);
+        }
+        
+        /* 影（Dark）モード時の別ウィンドウの衣替え */
+        body.theme-dark .icon-modal-window {
+            background-color: #111a2e;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        /* 日付数字をタップできる記号にする */
+        #selected-day-number {
+            cursor: pointer;
+            user-select: none;
+            transition: opacity 0.2s;
+        }
+        #selected-day-number:hover {
+            opacity: 0.6;
+        }
+
 
     </style>
 <!-- 📱 スマホアプリ化（PWA）のための設定 -->
@@ -680,7 +747,7 @@ if ('serviceWorker' in navigator) {
                 <input type="number" id="set-budget" placeholder="optional" onblur="setBudget()">
             </div>    
             <div class="input-group">
-                <input type="text" id="memo" placeholder="🖊" style="text-align: left; width: 45%;">
+                <input type="text" id="memo" placeholder="item" style="text-align: left; width: 45%;">
                 <input type="number" id="amount" placeholder="0" style="width: 35%;">
                 <div style="display: flex; align-items: center;">
             <button id="minus-btn" onclick="minusMoney()" style="font-size: 18px; font-weight: 300;">＋</button>
@@ -721,49 +788,15 @@ if ('serviceWorker' in navigator) {
 
         <div id="daily-memo-section" class="daily-memo-section" style="display: none;">
             
-            <!-- 【左側】大きく表示される日付の「日」の数字だけが入る部屋 -->
-            <div id="selected-day-number" class="memo-date-left">07</div>
+            <!-- 【左側】大きく表示される日付の「日」の数字だけが入る部屋（タップで窓が開く） -->
+            <div id="selected-day-number" class="memo-date-left" onclick="openIconModal()">07</div>
+
             
             <!-- 【中央】美しい縦の1本線 -->
             <div class="memo-center-line"></div>
             
                     <!-- 【右側】お天気やスイッチ、メモが並ぶ部屋 -->
             <div class="memo-content-right">
-                
-                                <!-- 1段目：お薬スイッチ ＆ お天気選択 ＆ 生理スイッチ -->
-                <div class="memo-icons-row">
-                    
-                    <!-- 左側：お薬 ＆ お天気グループ（新CSS適用） -->
-                    <div class="icon-group-left">
-                        <!-- 💊 お薬スイッチ（通常時のサイズとスタイルをスタイルシート側で一括制御） -->
-                        <span onclick="togglePillsReminder()" id="pills-switch">💊</span>
-                        
-                        <!-- 美しい区切りのための極薄の縦線 -->
-                        <div style="width: 1px; height: 12px; background-color: #f2ede9; opacity: 0.5;"></div>
-
-                        <!-- ☀️ お天気選択 -->
-                        <div id="weather-select-group">
-                            <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
-                            <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
-                            <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
-                            <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
-                        </div>
-                    </div>
-                    
-                    <!-- 右側：生理スイッチ（位置はキープ） -->
-                    <div style="display: flex; gap: 12px;">
-                        <label class="period-checkbox-label">
-                            <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
-                            <span><span style="color: #EBE1A9; margin-right: 2px;">✿</span> start</span>
-                        </label>
-                        <label class="period-checkbox-label">
-                            <input type="checkbox" id="period-end-checkbox" onchange="savePeriodEnd()">
-                            <span>end</span>
-                        </label>
-                    </div>
-                </div>
-          
-    
                 
             <!-- 3段目：💊 メモ入力欄（プレースホルダーを完全に引き算し、美しい空白へ） -->
 <div class="memo-input-wrapper" style="margin-top: 6px;">
@@ -785,6 +818,15 @@ if ('serviceWorker' in navigator) {
     </div>
 </div>
 <script>
+
+    // 🚪 アイコン別ウィンドウ（モーダル）の開閉制御
+    function openIconModal() {
+        document.getElementById('icon-modal').classList.add('is-open');
+    }
+    function closeIconModal(event) {
+        document.getElementById('icon-modal').classList.remove('is-open');
+    }
+    
 // 🌓 配色テーマ切り替えのプログラム
     let currentTheme = localStorage.getItem('myTheme') || 'light';
     if (currentTheme === 'dark') {
@@ -1339,5 +1381,40 @@ function importData() {
 
 
 </script>
+<!-- 📥 タップすると浮かび上がるアイコン一覧の別ウィンドウ -->
+<div id="icon-modal" class="icon-modal-overlay" onclick="closeIconModal(event)">
+    <div class="icon-modal-window" onclick="event.stopPropagation()">
+        <!-- 上記で新しく作った memo-icons-row の中身をそのまま綺麗に格納 -->
+        <div class="memo-icons-row" style="flex-direction: column; gap: 20px; margin-bottom: 0;">
+            <!-- お薬 ＆ お天気グループ -->
+            <div class="icon-group-left" style="gap: 16px; justify-content: center; width: 100%;">
+                <span onclick="togglePillsReminder()" id="pills-switch" style="font-size: 18px;">💊</span>
+                <div style="width: 1px; height: 12px; background-color: #f2ede9; opacity: 0.5;"></div>
+                <div id="weather-select-group" style="gap: 12px; font-size: 18px;">
+                    <span onclick="selectWeather('☀️')" id="we-☀️" style="cursor: pointer;">☀️</span>
+                    <span onclick="selectWeather('☁️')" id="we-☁️" style="cursor: pointer;">☁️</span>
+                    <span onclick="selectWeather('☂️')" id="we-☂️" style="cursor: pointer;">☂️</span>
+                    <span onclick="selectWeather('☃️')" id="we-☃️" style="cursor: pointer;">☃️</span>
+                </div>
+            </div>
+            
+            <!-- 美しい水平の境界線 -->
+            <div style="width: 100%; height: 1px; background-color: #f2ede9; opacity: 0.3;"></div>
+
+            <!-- 生理スイッチ -->
+            <div style="display: flex; gap: 20px; justify-content: center; width: 100%;">
+                <label class="period-checkbox-label" style="font-size: 13px;">
+                    <input type="checkbox" id="period-start-checkbox" onchange="savePeriodStart()">
+                    <span><span style="color: #EBE1A9; margin-right: 2px;">✿</span> start</span>
+                </label>
+                <label class="period-checkbox-label" style="font-size: 13px;">
+                    <input type="checkbox" id="period-end-checkbox" onchange="savePeriodEnd()">
+                    <span>end</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
