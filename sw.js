@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lucca-cache-v6';
+const CACHE_NAME = 'lucca-cache-v7';
 const urlsToCache = ['./', 'index.html', 'manifest.json'];
 
 // インストール時に、古い記憶を待たずに強制的に最新へ進む「スキップ処理」を追加
