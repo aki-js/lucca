@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lucca</title>
-    <link href="https://googleapis.com" rel="stylesheet">
- <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="lucca">
@@ -14,12 +16,21 @@
                 body {
             background-color: #ffffff;
             color: #5c4e46; /* 柔らかく洗練されたセピアグレー */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             padding: 60px 20px;
             text-align: center;
             overflow-x: hidden; 
             letter-spacing: 0.08em;
+
+                        /* 🌟【追加】画面内のすべての色・背景の変化を0.5秒かけて滑らかに引き算する */
+            transition: background-color 0.5s cubic-bezier(0.25, 1, 0.5, 1), color 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
+    input, button, select, textarea {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+            font-weight: 200 !important; /* 薄く、美しく */
+        }
+
+
         .wrapper {
             max-width: 700px; /* 横並び用に幅を拡張 */
             margin: 0 auto;
@@ -60,8 +71,8 @@
             font-weight: 300;
             text-transform: uppercase;
         }
-        .calendar-day {
-        font-size: 12px;
+                .calendar-day {
+            font-size: 12px;
             color: #bfae9e; /* 通常の数字を少し淡くしてノイズを減らす */
             font-weight: 300;
             width: 28px;
@@ -71,8 +82,10 @@
             justify-content: center;
             cursor: pointer;
             position: relative;
-            box-sizing: border-box; /* 🌟【追加】サイズ計算を均一に固定する */
-            margin: 0 auto;         /* 🌟【追加】グリッドのマス目の中で綺麗に中央に佇ませる */
+            box-sizing: border-box; /* 🌟サイズ計算を均一に固定する */
+            margin: 0 auto;         /* 🌟グリッドのマス目の中で綺麗に中央に佇ませる */
+            
+            /* 🌟 overflow: hidden; は絶対に入れない（お花が消える原因になります） */
         }
         /* 支出がある日にひっそり灯るドット */
         .calendar-day.has-dot::after {
@@ -112,7 +125,8 @@
             line-height: 1;
         }  
 
-        .calendar-day.is-period-start::before {
+                /* 🌟 お花を before から after に変更し、スタッキングコンテキストの影響を受けない特等席へ */
+        .calendar-day.is-period-start::after {
             content: '✿'; /* 🌟 月の涙をイメージした花のシルエット */
             font-size: 10px;
             color: #EBE1A9; /* 🌟 仄かに青白く光る、月の涙のティアーズカラー */
@@ -120,7 +134,7 @@
             top: -2px; 
             right: -3px;
             line-height: 1;
-            z-index: 2;
+            z-index: 5; /* 🌟 グレーの座布団より確実に前に出す */
             font-weight: normal;
         }
 
@@ -139,13 +153,13 @@
             -webkit-text-fill-color: initial !important;
         }
 
-        /* カレンダーの日付が選択されたとき（文字色と太さだけを変える） */
+                /* カレンダーの日付が選択されたとき（文字色と太さだけを変える） */
         .calendar-day.is-selected {
             color: #5c4e46;
             font-weight: 500;
             position: relative;
         }
-        /* 選択されたとき、中の数字を動かさずに「背景だけ（長方形座布団）」を敷く */
+        /* 選択されたとき、中の数字やお花を動かさずに「背景の座布団」だけを敷く */
         .calendar-day.is-selected::before {
             content: '';
             position: absolute;
@@ -155,11 +169,11 @@
             height: 30px;         
             background-color: #e8e7e8; 
             border-radius: 4px;   /* ほんのり丸い四角 */
-            z-index: -1;          /* 背景色を数字の「後ろ」に回り込ませる */
+            z-index: -1;          /* 🌟 数字の後ろ、マスの白背景の前に敷く */
         }
 
-        
 
+        
             .daily-memo-section {
             margin-top: 35px;
             text-align: left;
@@ -538,6 +552,42 @@
     opacity: 1 !important;
     transform: scale(1.2);
 }
+        /* 🌑 影（Dark）テーマの調律コード */
+        body.theme-dark {
+            background-color: #0a0f1d; 
+            color: #d2d7df;            /* 月明かりのホワイトグレー */
+        }
+        body.theme-dark .calendar-month-text,
+        body.theme-dark .memo-date-left,
+        body.theme-dark .calendar-day.is-today,
+        body.theme-dark .history-memo,
+        body.theme-dark input {
+            color: #d2d7df;
+        }
+        body.theme-dark .weekday-label,
+        body.theme-dark .calendar-day {
+            color: #5a6578; /* 夜霧に溶け込む淡いグレー */
+        }
+        body.theme-dark .calendar-day.is-selected {
+            color: #0a0f1d; /* 選択された数字は背景色でくり抜く */
+        }
+        body.theme-dark .calendar-day.is-selected::before {
+            background-color: #d2d7df; /* 選択座布団を月明かりの色に */
+        }
+        body.theme-dark .memo-center-line,
+        body.theme-dark .memo-input-wrapper,
+        body.theme-dark .input-group,
+        body.theme-dark .history-item {
+            border-color: #1a2436; /* 境界線も静かに闇へ馴染ませる */
+        }
+        body.theme-dark .balance-label,
+        body.theme-dark .balance-unit,
+        body.theme-dark .memo-date-label,
+        body.theme-dark .history-date,
+        body.theme-dark .history-item > span,
+        body.theme-dark button {
+            color: #788599;
+        }
 
 
     </style>
@@ -564,7 +614,7 @@ if ('serviceWorker' in navigator) {
 <body>
 <div class="wrapper">
     <div class="balance-section">
-        <span class="balance-label">LUCCA</span>
+        <span class="balance-label" onclick="toggleTheme()" style="cursor: pointer; user-select: none;">LUCCA</span>
         <div class="balance-container">
             <span id="balance" class="balance-amount">0</span>
             <span class="balance-unit">yen</span>
@@ -684,6 +734,23 @@ if ('serviceWorker' in navigator) {
     </div>
 </div>
 <script>
+// 🌓 配色テーマ切り替えのプログラム
+    let currentTheme = localStorage.getItem('myTheme') || 'light';
+    if (currentTheme === 'dark') {
+        document.body.classList.add('theme-dark');
+    }
+
+    function toggleTheme() {
+        if (document.body.classList.contains('theme-dark')) {
+            document.body.classList.remove('theme-dark');
+            localStorage.setItem('myTheme', 'light');
+        } else {
+            document.body.classList.add('theme-dark');
+            localStorage.setItem('myTheme', 'dark');
+        }
+    }
+
+
     let currentBalance = Number(localStorage.getItem('myBalance')) || 900000000;
     let lastSubtractedAmount = 0;
     let historyLogs = JSON.parse(localStorage.getItem('myHistoryLogs')) || [];

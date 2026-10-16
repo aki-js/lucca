@@ -1,12 +1,13 @@
-const CACHE_NAME = 'lucca-cache-v4';
+const CACHE_NAME = 'lucca-cache-v4'; // 💡帰宅後はこの数字を「v4」にして試してみてください
 const urlsToCache = ['./', 'index.html', 'manifest.json'];
 
-// インストール時に新しいキャッシュを保存
+// インストール時に、古い記憶を待たずに強制的に最新へ進む「スキップ処理」を追加
 self.addEventListener('install', event => {
+  self.skipWaiting(); // 🌟【追加】スマホに「遠慮せずすぐ進化して！」と命令する隠し味
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
 });
 
-// アクティベート時に古いキャッシュを自動でゴミ箱へ捨てる
+// アクティベート時に古いキャッシュを即座に消去し、アプリ全体を支配する
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -18,7 +19,7 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim()) // 🌟【追加】開いている画面を即座に最新にする処理
   );
 });
 
