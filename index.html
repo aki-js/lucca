@@ -13,9 +13,17 @@
     <meta name="apple-mobile-web-app-title" content="lucca">
     <link rel="apple-touch-icon" href="https://flaticon.com">
     <style>
-                body {
-            background-color: #ffffff;
-            color: #5c4e46; /* 柔らかく洗練されたセピアグレー */
+    
+    body {
+    background-color: #ffffff;
+    /* 🌟【調整】お花の光の輪がはっきり見えるように濃度（透明度）を引き上げました */
+    background-image: 
+        radial-gradient(circle at 85% 15%, rgba(92, 84, 70, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 15% 55%, rgba(140, 126, 116, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 50% 85%, rgba(191, 174, 158, 0.18) 0%, transparent 45%);
+    background-attachment: fixed;
+            
+    color: #5c4e46; /* 柔らかく洗練されたセピアグレー */
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -28,33 +36,36 @@
                         /* 🌟【追加】画面内のすべての色・背景の変化を0.5秒かけて滑らかに引き算する */
             transition: background-color 0.5s cubic-bezier(0.25, 1, 0.5, 1), color 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
-    input, button, select, textarea {
+            /* 仲間外れを防ぐため、頭に「.left-column」を添えてフォーム専用の設定に限定します */
+    .left-column input, .left-column button, .left-column select, .left-column textarea {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-            font-weight: 200 !important; /* 薄く、美しく */
+            font-weight: 200 !important;
         }
 
 
-        .wrapper {
-            max-width: 700px; /* 横並び用に幅を拡張 */
-            margin: 0 auto;
-            position: relative;
-        }
-        /* 横並び用のレイアウトコンテナ */
-        .main-container {
-            display: flex;
-            gap: 50px; /* エリア間の美しい余白 */
-            justify-content: center;
-            align-items: flex-start;
-            margin-top: 30px;
-        }
-        .left-column {
-            flex: 1;
-            max-width: 320px;
-        }
-        .right-column {
-            flex: 1;
-            max-width: 320px;
-        }
+
+
+     .wrapper {
+    /* 🌟【変更】横幅をスマホサイズ（400px）に制限し、大胆な余白を作って中央に佇ませる */
+    max-width: 400px; 
+    margin: 0 auto;
+    position: relative;
+    padding: 20px 10px; /* 窮屈にならない程度の内側の余白 */
+    }
+
+    /* 🌟【追加】横並びになっていたメインコンテナを縦一列（中央寄せ）に強制調律します */
+    .main-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 40px !important; /* 計算エリアとカレンダーの間の美しい縦余白 */
+    }
+
+    /* 🌟【追加】左右のカラムの幅を100%に広げて、中央寄せの軸を完璧に揃えます */
+    .left-column, .right-column {
+    max-width: 100% !important;
+    width: 100% !important;
+    }
+
         /* カレンダーの月の数字専用スタイル */
         .calendar-month-text {
             font-size: 24px;       /* 数字を心地よい大きさに拡張 */
@@ -231,7 +242,6 @@
 }
 #daily-memo-input {
     width: 100%;
-    text-align: left;
     font-size: 13px;
     color: #8c7e74;
     padding: 0;
@@ -330,29 +340,45 @@
         }
         /* 入力エリアのグループ */
         .input-group {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #f2ede9;
-            padding-bottom: 8px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px; /* パネルの内側に心地よい余白を作る */
+    border-bottom: none; /* 🌟うるさかった下線を消去 */
+    
+    /* 🌟グラスモーフィズム：1枚の美しい透き通るパネルへ */
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    }
+
+        /* ダークモード時はすりガラスを夜の静けさに馴染ませる */
+        body.theme-dark .input-group {
+        background: rgba(16, 25, 48, 0.2);
+        border: 1px solid rgba(210, 215, 223, 0.04);
         }
+
         .input-group label {
             font-size: 14px;
             color: #8c7e74;
             white-space: nowrap;
         }
         input {
-            border: none;
-            background: transparent;
-            text-align: right;
-            font-size: 16px;
-            color: #5c4e46;
-            outline: none;
-            width: 40%;
-            padding-right: 5px;
-            font-family: inherit;
-        }
+    border: none;
+    background: transparent;
+    text-align: left; /* 🌟右寄せから、凛とした「左寄せ」へ変更 */
+    font-size: 15px;
+    color: #5c4e46;
+    outline: none;
+    width: 60%; /* 文字が途切れないように少し広げる */
+    padding-left: 8px;
+    font-family: inherit;
+}
+
+
         input::placeholder {
             color: #d1c7bd;
         }
@@ -449,6 +475,12 @@
             50% { transform: translate(-50%, -100%) scale(1.1); filter: blur(1px); opacity: 0.5; }
             100% { transform: translate(-50%, -130%) scale(1.2); filter: blur(4px); opacity: 0; }
         }
+        @keyframes radioPulse {
+            0% { opacity: 0.2; text-shadow: 0 0 2px rgba(255,255,255,0.2); }
+            50% { opacity: 0.85; text-shadow: 0 0 6px rgba(255,255,255,0.7); }
+            100% { opacity: 0.2; text-shadow: 0 0 2px rgba(255,255,255,0.2); }
+        }
+
 
         /* 🌟【追加】スマホの縦長画面（幅768px以下）に完璧に最適化する調律コード */
         @media (max-width: 768px) {
@@ -600,8 +632,13 @@
 
         /* 🌑 影（Dark）テーマの調律コード */
         body.theme-dark {
+            /* 🌟【変更】闇夜に浮かぶ青・紫系のX-rayフラワー背景 */
             background-color: #0a0f1d; 
-            color: #d2d7df;            /* 月明かりのホワイトグレー */
+            background-image: 
+              radial-gradient(circle at 75% 25%, rgba(131, 117, 140, 0.28) 0%, transparent 55%),
+              radial-gradient(circle at 20% 70%, rgba(184, 203, 220, 0.25) 0%, transparent 60%),
+              radial-gradient(circle at 65% 85%, rgba(90, 101, 120, 0.22) 0%, transparent 50%);
+            color: #d2d7df;            
         }
         body.theme-dark .calendar-month-text,
         body.theme-dark .memo-date-left,
@@ -705,9 +742,116 @@
         #selected-day-number:hover {
             opacity: 0.6;
         }
+    /* 2つの入力欄を包む、1枚の美しいすりガラスの塊（パネル） */
+.left-column {
+    background: rgba(16, 25, 48, 0.25) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(210, 215, 223, 0.05) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+}
+
+/* パネルの中の個別の入力行（下線を復活させ、極薄で儚く） */
+.input-group {
+    margin: 8px 0 !important;
+    padding: 10px 4px !important;
+    border-bottom: 1px solid rgba(210, 215, 223, 0.06) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+}
+
+/* 最後の行だけ下線を消してスッキリさせる */
+.input-group:last-of-type {
+    border-bottom: none !important;
+}
+
+/* 手持ち金額（budget）の文字を小さくして、itemの入力欄とメリハリをつける */
+#set-budget {
+    font-size: 13px !important;
+    opacity: 0.4 !important;
+    font-weight: 100 !important;
+}
+.input-group label {
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
+    opacity: 0.5 !important;
+}
+
+/* 入力テキストを左寄せに統一 */
+input {
+    text-align: left !important;
+    font-size: 15px !important;
+    padding-left: 8px !important;
+}
+
+/* 🌟【追加】カレンダーの数字と曜日が闇と同化するのを防ぎ、美しく発光させます */
+body.theme-dark .calendar-day {
+    color: rgba(210, 215, 223, 0.4) !important; /* 通常の数字を儚いホワイトグレーに */
+}
+
+body.theme-dark .calendar-day.is-today {
+    color: #ffffff !important; /* 今日の日付をクッキリと白く */
+    font-weight: 500 !important;
+}
+
+body.theme-dark .calendar-day.is-selected {
+    color: #0a0f1d !important; /* 選択された日付の数字を背景色で美しくくり抜く */
+    font-weight: 500 !important;
+}
+
+body.theme-dark .calendar-day.is-selected::before {
+    background-color: rgba(210, 215, 223, 0.85) !important; /* 選択座布団を月明かりの白に */
+}
+
+body.theme-dark .weekday-label {
+    color: rgba(210, 215, 223, 0.25) !important; /* 曜日のラベル（S M T W...）をさらに淡く */
+}
+
+/* 🌟【追加】フォームの設定に巻き込まれて左に隠れてしまった数字を、マスのど真ん中へ救出します */
+.calendar-day span {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important; /* 左寄せを打ち消して中央寄せに強制調律 */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ついでに数字のフォントサイズや太さを整えてノイズ感を削ります */
+body.theme-dark .calendar-day span {
+    color: rgba(210, 215, 223, 0.6) !important; /* 闇に馴染む美しいホワイトグレー */
+    font-weight: 200 !important;
+}
+
+body.theme-dark .calendar-day.is-today span {
+    color: #ffffff !important; /* 今日の数字はパキッと白く */
+    font-weight: 500 !important;
+}
+
+body.theme-dark .calendar-day.is-selected span {
+    color: #0a0f1d !important; /* 選択された日の数字は座布団の色でくり抜く */
+    font-weight: 500 !important;
+}
+
+.calendar-day span {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+}
+body.theme-dark .calendar-day span {
+    color: rgba(210, 215, 223, 0.6) !important;
+}
+
+.calendar-grid div, .calendar-day, .calendar-day span {
+    text-align: center !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
 
 
-    </style>
+</style>
 <!-- 📱 スマホアプリ化（PWA）のための設定 -->
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -724,6 +868,45 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('登録エラー:', err));
   });
 }
+function checkRadioBroadcast() {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0:日, 1:月, 2:火, 3:水, 4:木, 5:金, 6:土
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    // 💡 24:00（深夜0:00）〜 25:00（深夜1:00）を分単位に換算
+    const currentTotalMinutes = (hours * 60) + minutes;
+    const startTotalMinutes = (0 * 60) + 0;   // 0時00分
+    const endTotalMinutes = (1 * 60) + 0;     // 1時00分
+
+    // 条件1: 毎週「火曜日（2）」かどうか
+    const isTuesday = (dayOfWeek === 3);
+
+    // 条件2: ラジオの放送時間中かどうか
+    const isBroadcasting = (currentTotalMinutes >= startTotalMinutes && currentTotalMinutes < endTotalMinutes);
+
+    // 条件3: 画面がダークモード（theme-dark）になっているか
+    const isDarkMode = document.body.classList.contains('theme-dark');
+
+    const radioEl = document.getElementById('radio-gimmick');
+    
+    // すべての条件を満たしたときだけ、ご友人の周波数を灯す
+    if (isTuesday && isBroadcasting && isDarkMode) {
+        radioEl.textContent = "81.3 MHz ON AIR"; 
+        radioEl.style.display = 'block';
+    } else {
+        radioEl.style.display = 'none';
+    }
+}
+
+
+
+// 画面を開いた時と、その後は1分ごとに自動で時間をチェックする
+window.addEventListener('DOMContentLoaded', () => {
+    checkRadioBroadcast();
+    setInterval(checkRadioBroadcast, 60000); 
+});
+
 </script>
 
 
@@ -732,6 +915,8 @@ if ('serviceWorker' in navigator) {
 <div class="wrapper">
     <div class="balance-section">
         <span class="balance-label" onclick="toggleTheme()" style="cursor: pointer; user-select: none;">LUCCA</span>
+        
+                <!-- 📻 ラジオギミックの表示エリア -->
         <div class="balance-container">
             <span id="balance" class="balance-amount">0</span>
             <span class="balance-unit">yen</span>
@@ -741,27 +926,25 @@ if ('serviceWorker' in navigator) {
      <div class="main-container">
         <!-- 左側：計算エリア -->
         <div class="left-column">
-           <div class="input-group" style="margin-top: 0;">
-                <label>budget</label>
-                <!-- 🌟【修正】ボタンを消し、フォーカスが外れたら自動保存（onblur）する挙動へ -->
-                <input type="number" id="set-budget" placeholder="optional" onblur="setBudget()">
-            </div>    
-            <div class="input-group">
-                <input type="text" id="memo" placeholder="item" style="text-align: left; width: 45%;">
-                <input type="number" id="amount" placeholder="0" style="width: 35%;">
-                <div style="display: flex; align-items: center;">
-            <button id="minus-btn" onclick="minusMoney()" style="font-size: 18px; font-weight: 300;">＋</button>
-                </div>
-            </div>
-                        <div class="history-section" style="margin-top: 30px;"> <!-- 上の余白を少しマイルドに調整 -->
-                <ul id="history-list" class="history-list"></ul>
-            </div>
+    <!-- 行①：手持ち金額の上書き（文字を小さく脇役に） -->
+    <div class="input-group" style="margin-top: 0;">
+        <label>budget</label>
+        <input type="number" id="set-budget" placeholder="optional" onblur="setBudget()">
+    </div>    
+    <!-- 行②：アイテムと金額の入力（ここを主役に） -->
+    <div class="input-group">
+        <input type="text" id="memo" placeholder="item" style="width: 45%;">
+        <input type="number" id="amount" placeholder="0" style="width: 30%; text-align: right;">
+        <button id="minus-btn" onclick="minusMoney()" style="font-size: 16px; font-weight: 200; padding: 0 0 0 8px; color: #788599;">＋</button>
+    </div>
+</div>
 
 
+
+        <div class="history-section">
+           <ul id="history-list" class="history-list"></ul>
         </div>
 
-
-        
         <div class="right-column">
          <!-- 月名と切り替えボタンを美しく並べるヘッダー -->
             <div style="display: flex; align-items: baseline; margin-bottom: 15px; padding-left: 4px;">
@@ -840,9 +1023,10 @@ if ('serviceWorker' in navigator) {
 
 <!-- 📥 【カレンダーエリアの一番下にアイコンを配置】 -->
 <div style="margin-top: 45px; text-align: right; padding: 0 4px; display: flex; justify-content: flex-end; gap: 18px; font-size: 14px;">
+    <!-- 📻 ラジオギミック：優しく明滅するネオンエフェクト付き -->
+    <span id="radio-gimmick" style="font-size: 10px; color: #ffffff; letter-spacing: 0.15em; display: none; font-weight: 200; align-self: center; margin-right: auto; padding-left: 4px; text-shadow: 0 0 4px rgba(255,255,255,0.6); animation: radioPulse 3s infinite ease-in-out;">81.3 MHz ON AIR</span>
     <span onclick="exportData()" title="データを保存" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔐</span>
     <span onclick="importData()" title="データを復元" style="opacity: 0.35; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='0.35'">🔑</span>
-</div> <!-- 👈 ここに「閉じタグ」を正しく配置します -->
 
         </div> <!-- 右カラム（right-column）の閉じタグ -->
 
@@ -864,10 +1048,11 @@ if ('serviceWorker' in navigator) {
             document.body.classList.add('theme-dark');
             localStorage.setItem('myTheme', 'dark');
         }
+        checkRadioBroadcast(); // 📻【ここを1行追加！】
     }
 
 
-    let currentBalance = Number(localStorage.getItem('myBalance')) || 900000000;
+    let currentBalance = Number(localStorage.getItem('myBalance')) || 5000;
     let lastSubtractedAmount = 0;
     let historyLogs = JSON.parse(localStorage.getItem('myHistoryLogs')) || [];
     const emoji = '💔';
@@ -1068,40 +1253,37 @@ if ('serviceWorker' in navigator) {
         const isCurrentYear = year === today.getFullYear();
         const isCurrentMonth = month === today.getMonth();
 
-        // 1日から最終日までの数字を並べる
+        // 1日から最終日までの数字を並べる（🌟ここを丸ごと差し替えてください）
         for (let date = 1; date <= lastDate; date++) {
             const dayDiv = document.createElement('div');
             dayDiv.className = 'calendar-day';
-            dayDiv.textContent = date;
+            
+            // 🌟【修正】ループの中で毎回新しく数字の部屋を作ることで、31日への上書き家出を防ぎます
+            const spanText = document.createElement('span');
+            spanText.textContent = date;
+            dayDiv.appendChild(spanText);
 
-        // 🌟【修正】最新の生理開始日（periodStarts）をもとに、未来の周期（28日後〜32日後）を正しく予測する
+            // 最新の生理開始日（periodStarts）をもとに、未来の周期（28日後〜32日後）を予測
             if (periodStarts.length > 0) {
-                // 一番直近（最後）の生理開始日を取得
                 const lastStartStr = periodStarts[periodStarts.length - 1];
                 const lastStartDate = new Date(lastStartStr);
-                
-                // 現在ループしているマスの日付オブジェクトを作る
                 const currentGridDate = new Date(year, month, date);
-                
-                // 直近の生理開始日から、このマスまでの経過日数を計算
                 const diffTime = currentGridDate - lastStartDate;
                 const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                // 経過日数が「28日〜32日」の間、または周期が長引いた場合の「56日〜60日後（2周期先）」などもカバー
                 const isNextPeriodPrediction = (diffDays >= 28 && diffDays <= 32) || (diffDays >= 56 && diffDays <= 60);
                 
                 if (isNextPeriodPrediction) {
-                dayDiv.style.backgroundColor = '#b8cbdc'; // 🌟 仄かに青白く光るティアーズカラー
-                dayDiv.style.color = '#ffffff';           /* 🌟 青背景の中で数字が美しく引き立つよう、文字をピュアな白に */
+                    dayDiv.style.backgroundColor = '#b8cbdc'; 
+                    spanText.style.color = '#ffffff'; // 🌟中の文字を白く
                     dayDiv.style.borderRadius = '4px';
                 }
             }
 
-            // 🌟【追加】日付をタップしたときにその日を選択するイベントを紐付け
+            // 日付をタップしたときのイベント
             dayDiv.onclick = () => selectDay(year, month, date);
 
-        // 実行している年・月・日が「今日」と一致したらクラスを付与
-        if (isCurrentYear && isCurrentMonth && date === today.getDate()) {
+            // 今日の一致判定
+            if (isCurrentYear && isCurrentMonth && date === today.getDate()) {
                 dayDiv.classList.add('is-today');
             }
 
@@ -1110,14 +1292,11 @@ if ('serviceWorker' in navigator) {
                 dayDiv.classList.add('is-selected');
             }
 
-            // 👑 2026年の10月7日だけに王冠クラスを灯す
             if (currentLoopDateStr === "2026/10/07") {
                 dayDiv.classList.add('is-special-crown');
             }
 
-            // 🌟 カレンダーのドットはお金とメモだけに絞ってノイズカット
-            const hasRecord = historyLogs.some(log => log.type === 'minus' && log.date.startsWith(currentLoopDateStr));
-        
+            const hasRecord = Array.isArray(historyLogs) && historyLogs.some(log => log && log.type === 'minus' && log.date && log.date.startsWith(currentLoopDateStr));
             if (hasRecord) {
                 dayDiv.classList.add('has-dot'); 
             }
@@ -1126,37 +1305,32 @@ if ('serviceWorker' in navigator) {
                 dayDiv.classList.add('has-memo-dot'); 
             }
 
-        // 開始日から終了日までの「すべての期間中」に📍クラスを付与する
-        let isInPeriod = false;
-        
-        // 登録されているすべての「開始日」をループしてチェック
-        periodStarts.forEach(startStr => {
-            const startDate = new Date(startStr);
-            const currentGridDate = new Date(currentLoopDateStr); // 🌟ここも currentLoopDateStr に統一
-            
-            // この開始日以降の、一番近い「終了日」を探す
-            const nextEndStr = periodEnds.find(endStr => endStr >= startStr);
-            
-            if (nextEndStr) {
-                // 終了日が見つかっている場合、その期間内かどうか
-                const endDate = new Date(nextEndStr);
-                if (currentGridDate >= startDate && currentGridDate <= endDate) {
-                    isInPeriod = true;
+            let isInPeriod = false;
+            periodStarts.forEach(startStr => {
+                const startDate = new Date(startStr);
+                const currentGridDate = new Date(currentLoopDateStr);
+                const nextEndStr = periodEnds.find(endStr => endStr >= startStr);
+                
+                if (nextEndStr) {
+                    const endDate = new Date(nextEndStr);
+                    if (currentGridDate >= startDate && currentGridDate <= endDate) {
+                        isInPeriod = true;
+                    }
+                } else {
+                    if (currentLoopDateStr === startStr) {
+                        isInPeriod = true;
+                    }
                 }
-            } else {
-                // まだ終了日が未登録（生理中）の場合、開始日当日だけ📍を灯しておく
-                if (currentLoopDateStr === startStr) { // 🌟ここも currentLoopDateStr に統一
-                    isInPeriod = true;
-                }
+            });
+
+            if (isInPeriod) {
+                dayDiv.classList.add('is-period-start');
             }
-        });
 
-        if (isInPeriod) {
-            dayDiv.classList.add('is-period-start'); // 📍マークを灯す
-        }
-
+            dayDiv.appendChild(spanText); // 🌟数字をマスの内側にしっかりと閉じ込めます
             daysContainer.appendChild(dayDiv);
         }
+
     }
     // 月を切り替える関数（-1 で前月、1 で来月）
     function changeMonth(offset) {
@@ -1194,7 +1368,7 @@ if ('serviceWorker' in navigator) {
             if (endCheckbox) endCheckbox.checked = periodEnds.includes(targetStr);
             
             // 保存されている天気を復元
-            const savedWeather = dailyWeathers[targetStr];
+            const savedWeather = dailyWeathers[targetStr];  
             document.querySelectorAll('#weather-select-group span').forEach(el => el.classList.remove('is-weather-selected'));
             if (savedWeather) {
                 const activeWeatherEl = document.getElementById(`we-${savedWeather}`);
@@ -1316,7 +1490,8 @@ function checkPillsReminder() {
     const todayStr = `${todayObj.getFullYear()}/${String(todayObj.getMonth() + 1).padStart(2, '0')}/${String(todayObj.getDate()).padStart(2, '0')}`;
     
     // 今日の日付でお薬スイッチがON（true）になっていたら優しく灯す
-    if (dailyPills[todayStr]) {
+    if (dailyPills && dailyPills[todayStr]) {
+
         const toast = document.createElement('div');
         toast.className = 'pills-reminder-toast';
         toast.textContent = 'take it easy. ✿'; 
@@ -1403,4 +1578,3 @@ function importData() {
 
 </script>
 </body>
-</html>
