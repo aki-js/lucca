@@ -1745,19 +1745,25 @@ function requestNotificationPermission() {
 
 function sendAndroidNotification(title, message) {
     if ('Notification' in window && Notification.permission === 'granted') {
-        // PWA（Service Worker）経由で通知を飛ばすことで、Androidのロック画面に確実に常駐させます
         navigator.serviceWorker.ready.then(registration => {
             registration.showNotification(title, {
                 body: message,
-                icon: 'https://flaticon.com', // あなたのアプリのアイコンURL
+                icon: 'https://flaticon.com', 
                 badge: 'https://flaticon.com', 
-                vibrate: [100],           /* 🌟【修正】カンマの重なりを消し、Androidが短く1回震える正しい配列 [100] に直しました */
-                requireInteraction: true  /* 🌟【修正】文法的に正しい末尾の形へ整理しました */
-
+                vibrate:[100, 50, 100], /* 🌟 トントンと2回小気味よく震わせて存在感をアピール */
+                requireInteraction: true, /* 🌟 ユーザーが消すまで、ロック画面や通知欄にずっと常駐させる */
+                
+                // 👇【最重要】Androidシステムに「最優先（High）」で表示させるための隠し味
+                tag: 'lucca-status-notification', /* 常に1つの通知を上書き常駐させるための目印 */
+                renotify: true, /* メモが更新されたら、もう一度スマホをパッと点灯させる */
+                data: {
+                    priority: 'high' /* システムへの優先度要求 */
+                }
             });
         });
     }
 }
+
 
 // 🌟【調律】ウィンドウでメモを保存した瞬間に、Androidのロック画面へ通知を同期する
 function syncMemoToLockScreen() {

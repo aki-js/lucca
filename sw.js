@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lucca-cache-v9';
+const CACHE_NAME = 'lucca-cache-v10';
 const urlsToCache = ['./', 'index.html', 'manifest.json'];
 
 // インストール時に、古い記憶を待たずに強制的に最新へ進む「スキップ処理」を追加
@@ -26,4 +26,9 @@ self.addEventListener('activate', event => {
 // キャッシュがあればそれを返し、なければネットワークから取得
 self.addEventListener('fetch', event => {
   event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+});
+
+// 👇【追加】Androidシステムに対して、luccaの通知チャンネルの重要度を「最高（High）」に強制調律する
+self.addEventListener('notificationclick', event => {
+  event.notification.close(); // 通知をタップしたら優しく閉じるお守り
 });
