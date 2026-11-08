@@ -45,7 +45,6 @@
             top: 0;
             left: 0;
             z-index: 2;
-            filter: url('#jellyfish-goo');
         }
 
         /* 2. 球体（ノード）の文字・デザインをリッチに最適化 */
@@ -198,9 +197,10 @@
                     lastX: safeX, lastY: safeY,
                     parentId: n.parentId,
                     radius: n.radius,
-                    text: n.text,
+                    text: n.text || "?", // ★もし空っぽなら文字を補完してundefinedを徹底防衛！
                     isMaster: n.isMaster || false
                 });
+
             });
             // カウントを復元（マスター2つ分と追加分）
             let maxNum = 2;
@@ -265,7 +265,8 @@
                 id: id, el: el, x: x, y: y,
                 vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
                 scaleX: 1, scaleY: 1, angle: 0, lastX: x, lastY: y,
-                parentId: nearestNode.id, radius: 60
+                parentId: nearestNode.id, radius: 60,
+                text: orderText.replace(/\n/g, '<br>')
             };
             nodes.push(newNode);
             bindDragEvents(newNode);
